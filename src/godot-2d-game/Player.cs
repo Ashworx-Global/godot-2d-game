@@ -2,12 +2,16 @@ using Godot;
 
 public partial class Player : Area2D
 {
+    [Signal]
+    public delegate void HitEventHandler();
+
     public int Speed { get; set; } = 2800;
 
     public Vector2 ScreenSize;
 
     public override void _Ready()
     {
+        Hide();
         // Get the screen size
         ScreenSize = GetViewport().GetVisibleRect().Size;
     }
@@ -63,5 +67,13 @@ public partial class Player : Area2D
            y: Mathf.Clamp(Position.Y, 0, ScreenSize.Y)
         );
 
+    }
+
+    private void OnBodyEntered(Node2D body)
+    {
+        Hide(); // Player disappears after being hit.
+        EmitSignal(SignalName.Hit);
+        // Must be deferred as we can't change physics properties on a physics callback.
+        GetNode<CollisionShape2D>("CollisionShape2D").SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
     }
 }
