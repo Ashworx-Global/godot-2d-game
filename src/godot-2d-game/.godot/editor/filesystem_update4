@@ -1,2 +1,4 @@
 res://Player.cs
 res://player.tscn
+res://mob.tscn
+res://Mob.cs
