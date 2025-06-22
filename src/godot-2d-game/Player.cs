@@ -5,13 +5,13 @@ public partial class Player : Area2D
     public int Speed { get; set; } = 2800;
 
     public Vector2 ScreenSize;
-    
+
     public override void _Ready()
     {
         // Get the screen size
         ScreenSize = GetViewport().GetVisibleRect().Size;
     }
-    
+
     public override void _Process(double delta)
     {
         // Get the input direction
@@ -44,11 +44,24 @@ public partial class Player : Area2D
         {
             animatedSprite2D.Stop();
         }
-        
+
+        if (velocity.X != 0)
+        {
+            animatedSprite2D.Animation = "walk";
+            animatedSprite2D.FlipV = false;
+            animatedSprite2D.FlipH = velocity.X < 0;
+        }
+        else if (velocity.Y != 0)
+        {
+            animatedSprite2D.Animation = "up";
+            animatedSprite2D.FlipV = velocity.Y < 0;
+        }
+
         Position += velocity * (float)delta;
         Position = new Vector2(
            x: Mathf.Clamp(Position.X, 0, ScreenSize.X),
            y: Mathf.Clamp(Position.Y, 0, ScreenSize.Y)
         );
+
     }
 }
